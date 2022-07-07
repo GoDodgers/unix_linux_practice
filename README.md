@@ -1,6 +1,6 @@
 # unix_linux_practice
 
-### **UNIX**
+## **UNIX**
 
 #### _Terminal Character Device File_
 
@@ -15,3 +15,15 @@ When a user types, that data gets sent from the terminal to the computer and the
 
 With a _**Terminal Character Device File**_ we can turn on a mode called _Echoing_. When a terminal character device operates in echoing mode, then any input it recieves from the terminal it will then immediately echo back out to the terminal so it will appear on screen. In practice when echoing is on, whatever key is typed by the user the key will immediately appear on screen. ( Note :: the terminal _does not_ have an echoing mode, the _**Terminal Character Device File**_ has an echoing mode, so the data is actually being sent from the terminal and then immdiately back to the terminal )
 
+#### _Escape Squences_
+
+A sequence of characters beging with the ascii escape charater (ascii code 27 ) 
+
+_**TODO**_ :: how to change text color via escape squences
+
+#### _File Descriptor 0 && 1_
+
+In unix we have this convention where by proccess, when they are started expect to inherit from their parent two open file descriptor -- 0 && 1.
+
+File Descriptor 0 -- **Standard In** (_abv. stdin_)
+File Descriptor 1 -- **Standard Out** (_abv. stdout_)
