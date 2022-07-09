@@ -41,6 +41,12 @@ File Descriptor 1 -- **Standard Out** (_abv. stdout_)
 
 By Convention, Proccesses expect _**File Descriptor 0**_ (_stdin_) to be a file descriptor open for **reading** a terminal character device file, _**File Descriptor 1**_ (_stdout_) for **writing** that same terminal character device file. In practice this means when a proccess wishes to read text from a terminal it reads from stdin, and when a proccess wish to display text to that same terminal it writes to its stdout.
 
- #### _Forking_
+#### _Forking_
 
- When a Process forks in unix, the file descriptors get copied form the parent to child.
+When a Process forks in unix, the file descriptors get copied form the parent to child.
+
+#### _System Calls_ 
+
+Functions in the OS code that programs can invoke with a special instuction. These system calls are the primary means by which the OS exposes functionality to programs so that these programs can use features of the hardware. Ex: read and write data on a storage device or send and recieve data accross the network
+
+Reason system calls can only be ivoked with a special instuction is that normally when a proccess executes, it cannot read / execute data thats part of the OS's kernal itself. Each proccess is to run essentially confined to its own "box" (its own part of memory), thus the special instuction will break out of this "box" and the way it does this is in the instuction one must specifiy the number of the system call you wish to invoke and that causes the CPU to lookup an address that corresponds to that number in a special table.
