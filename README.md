@@ -89,7 +89,7 @@ Note: In most OS, the kernal code for these system calls are placed the address 
 |  |_________________________________________| |
 -----------------------------------------------
 
-Note: When a system call is invoked, it uses the stack of the proccess to place a stackframe for that system call like any other function
+Note: When a system call is invoked, it uses the stack of the proccess to place a stackframe for that system call like any other function, to execute in that context of the proccess of which invokes them. Which avoids a context switch, ie the memory tables dont have to be switched out from the current proccess. Thus the table can be left in memory for the duration of the proccess.
 
 -----------------------------------------------
 |                   STACK                      |
@@ -115,3 +115,30 @@ Note: When a system call is invoked, it uses the stack of the proccess to place 
 |  |     Frame of Main                       | |
 |  |_________________________________________| |
 -----------------------------------------------
+
+Another advantage is that this arrangment is that it allows for system calls to be interrupted arbitrarily. That is suspended and resumed later. Suspending a proccess typically the same if you are suspending user code, ie the code to the program itself or if it's running kernal code, ie a syscall.
+
+
+#### _Proccess_
+
+How a process transitions between a few different states
+
+ _________________________________________             _________________________________________ 
+|                                         |           |                                         |
+|       NEW Proccess Created              |           |         Proccess TERMINATED             |
+|_________________________________________|           |_________________________________________|
+                    |                                                      ^
+                    |                                                      |
+                    |                                                      |
+                    V                                                      |
+  _______________________________________                 _____________________________________ 
+ |                                       |               |                                     |
+ |                Waiting                |  <--------->  |               Running               |
+ |_______________________________________|               |_____________________________________|
+                       ^                                                   |
+                        \                                                  |
+                         \                                                 V
+                          \                               _____________________________________ 
+                           \                             |                                     |
+                            \__________________________  |              BLOCKED                |
+                                                         |_____________________________________|
