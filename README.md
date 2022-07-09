@@ -50,3 +50,41 @@ When a Process forks in unix, the file descriptors get copied form the parent to
 Functions in the OS code that programs can invoke with a special instuction. These system calls are the primary means by which the OS exposes functionality to programs so that these programs can use features of the hardware. Ex: read and write data on a storage device or send and recieve data accross the network
 
 Reason system calls can only be ivoked with a special instuction is that normally when a proccess executes, it cannot read / execute data thats part of the OS's kernal itself. Each proccess is to run essentially confined to its own "box" (its own part of memory), thus the special instuction will break out of this "box" and the way it does this is in the instuction one must specifiy the number of the system call you wish to invoke and that causes the CPU to lookup an address that corresponds to that number in a special table.
+
+Note: In most OS, the kernal code for these system calls are placed the address space of each process
+
+-----------------------------------------------
+|   _________________________________________  |
+|  |                                         | |
+|  |     Kerernal Code                       | |  <-------- only accessible in system calls
+|  |_________________________________________| |
+|   _________________________________________  |
+|  |                                         | |
+|  |     Stack                               | |
+|  |_________________________________________| |
+|                                              |
+|                                              |
+|                                              |
+|   _________________________________________  |
+|  |                                         | |
+|  |     HEAP                                | |
+|  |_________________________________________| |
+|   _________________________________________  |
+|  |                                         | |
+|  |                                         | |
+|  |                                         | |
+|  |     HEAP                                | |
+|  |                                         | |
+|  |                                         | |
+|  |_________________________________________| |
+|                                              |
+|                                              |
+|                                              |
+|   _________________________________________  |
+|  |     HEAP                                | |
+|  |_________________________________________| |
+|   _________________________________________  |
+|  |                                         | |
+|  |     Code                                | |  ^^^ JUMPS to Kernal Code via special instuction ^^^
+|  |_________________________________________| |
+-----------------------------------------------
