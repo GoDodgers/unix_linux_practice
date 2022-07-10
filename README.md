@@ -45,7 +45,25 @@ By Convention, processes expect _**File Descriptor 0**_ (_stdin_) to be a file d
 
 When a Process forks in unix, the file descriptors get copied form the parent to child.
 
-#### _System Calls_ 
+#### _System Calls_
+
+System Calls effectively represent the functionality of the OS exposed to programs.
+
+This includes syscalls for managing process them. Ex one process, starting other process so it can run another program. Then There are many syscall for dealing with...
+
+• Files, creating - deleting files, reading - writing files etc.
+
+• Sockets - Unix also has system calls for what it calls "sockets". A socket represents one end of a network connection. So when you want a program to talk to another program in another system, you create a socket in your program and that socket communicates with the socket in the other program, creating the channel of communcation.
+
+• Signals - a "signal" is basically a notification of some event or some condition sent from the OS or process to some other process. Many of the signals sent by the OS indicate some kind of error condition. Ex, when your program causes some kind of memory violation. That is it reads / writes some bytes of memory it doesnt have the permissions to, that will trigger a hardware exception in the CPU, causing the CPU to invoke some predetermined piece of OS code, and that OS code will send a singal to our process indicating the error. And when our process recieves that error it gets interrupted and will invoke a function predetermined to run for when it recieves that signal.
+
+• Inter-process Communication - Basically a kind of mechanism for process to communicate with eachother. Sockets are a type of inter-process communication. IE when a process communicates over a socket, the other program does not have to be on another system, it can actually be another process on the same system. However for process to communicate over the same system there are other mechanisms which have the general advantage of being more efficient
+
+• Threads - When a process runs, by default it has one single "thread" of execution. That is there is one code pointer pointing to what current instuction is and there is one single stack keep track of the functions being invoked. With multiple threads of execution you can effectively split up a process into separate threads, each thread having its own code pointer and its own stack. A different way to think about threads is that they are like separate processies which run independently and are scheduled independently but they share the same address space. So the data on the heap can be read and written by any thread in the process. TODO :: Multi Threads
+
+• I/O devices - in / out deivices (think stdin && stdout). _**Unix alows us to treat I/O devices like files.**_ What it really comes down to is that when it comes to reading / writing data from an I/O device, we can in most cases use the same syscalls that we use to read / write files. So in this sense we can treat I/O devices like files.
+
+ * Terminals - TODO (own section probably)
 
 Functions in the OS code that programs can invoke with a special instuction. These system calls are the primary means by which the OS exposes functionality to programs so that these programs can use features of the hardware. Ex: read and write data on a storage device or send and recieve data accross the network
 
@@ -119,7 +137,7 @@ Note: When a system call is invoked, it uses the stack of the process to place a
 Another advantage is that this arrangment is that it allows for system calls to be interrupted arbitrarily. That is suspended and resumed later. Suspending a process typically the same if you are suspending user code, ie the code to the program itself or if it's running kernal code, ie a syscall.
 
 
-#### _process_
+#### _Process_
 
 How a process transitions between a few different states
 
