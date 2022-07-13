@@ -139,6 +139,41 @@ Another advantage is that this arrangment is that it allows for system calls to 
 
 ### _Process_
 
+For every process currently in the system, the OS keeps a data stucture that keeps track of everything associated with that process. And those things include ...
+
+• Address Space - ( the memory table that is loaded when that process is running )
+• User IDs
+• File Discriptors
+• Environment
+• Current Directory
+• Parent Directory
+• Root Directory
+
+-----------------------------------------------
+|                 PROCESS                      |
+|                                              |
+|   _________________________________________  |
+|  |                                         | |
+|  |     Stack                               | |
+|  |_________________________________________| |
+|   _________________________________________  |
+|  |                                         | |
+|  |     HEAP                                | |
+|  |_________________________________________| |
+|                                              |
+|                                              |
+|   _________________________________________  |
+|  |                                         | |
+|  |     HEAP                                | |
+|  |_________________________________________| |
+|   _________________________________________  |
+|  |                                         | |
+|  |     CODE                                | |
+|  |_________________________________________| |
+-----------------------------------------------
+
+Looking closer at address spaces, most processies include a section for whats called _**Uninitialized Data**_ && _**Initialized Data**_. These are sections of memory set aside at the start of each program for storing global variables. The difference being that in the _**Uninitialized Data**_ those global variables _do not_ have any initial value where _**Initialized Data**_ _they do_. Reason we thing of initialized globals different from uninitialized globals is that for every initialized global that value needs to be stored in the executable,the initital value, where as uninitialized globals there is no value, the executable just needs to make note of how much space it will need for addtional global variables.
+
 How a process transitions between a few different states
 
  _________________________________________             _________________________________________ 
