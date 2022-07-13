@@ -63,6 +63,22 @@ This includes syscalls for managing process them. Ex one process, starting other
 
 • I/O devices - in / out deivices (think stdin && stdout). _**Unix alows us to treat I/O devices like files.**_ What it really comes down to is that when it comes to reading / writing data from an I/O device, we can in most cases use the same syscalls that we use to read / write files. So in this sense we can treat I/O devices like files.
 
+##### mmap - ( 'memory map' pages to the process address space )
+    • To allocate memory in a process, the process should invoke the _**mmap**_ syscall.
+
+##### munmap - ( 'memory unmap' pages from the process address space )
+    • Deallocates memory pages from the process address space
+
+```
+address = mmap(5000)
+# allocated memory
+
+munmap(address)
+# deallocated memory
+```
+
+Note: Notice we do not specifiy which bytes of memory we want. Generally its left up to the OS to keep track of all the 'chunks' in the address space. So it's left up to the OS to go find a chunk of memory (in the above case) of _**at least**_ 5000 continuous bytes and return to us the address of that first byte.
+
  * Terminals - TODO (own section probably)
 
 Functions in the OS code that programs can invoke with a special instuction. These system calls are the primary means by which the OS exposes functionality to programs so that these programs can use features of the hardware. Ex: read and write data on a storage device or send and recieve data accross the network
@@ -167,13 +183,13 @@ For every process currently in the system, the OS keeps a data stucture that kee
 |   _________________________________________  |
 |  |                                         | |
 |  |     HEAP                                | | // Explicitly allocated during execution
+|  |                                         | |
 |  |_________________________________________| |
 |                                              |
 |   _________________________________________  |
 |  |                                         | |
 |  |     HEAP                                | | // Explicitly allocated during execution
 |  |_________________________________________| |
-|                                              |
 |                                              |
 |   _________________________________________  |
 |  |                                         | |
