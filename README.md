@@ -71,6 +71,7 @@ Reason system calls can only be ivoked with a special instuction is that normall
 
 Note: In most OS, the kernal code for these system calls are placed the address space of each process
 
+```
 -----------------------------------------------
 |   _________________________________________  |
 |  |                                         | |
@@ -106,9 +107,11 @@ Note: In most OS, the kernal code for these system calls are placed the address 
 |  |     Code                                | |  ^^^ JUMPS to Kernal Code via special instuction ^^^
 |  |_________________________________________| |
 -----------------------------------------------
+```
 
 Note: When a system call is invoked, it uses the stack of the process to place a stackframe for that system call like any other function, to execute in that context of the process of which invokes them. Which avoids a context switch, ie the memory tables dont have to be switched out from the current process. Thus the table can be left in memory for the duration of the process.
 
+```
 -----------------------------------------------
 |                   STACK                      |
 |                                              |
@@ -133,6 +136,7 @@ Note: When a system call is invoked, it uses the stack of the process to place a
 |  |     Frame of Main                       | |
 |  |_________________________________________| |
 -----------------------------------------------
+```
 
 Another advantage is that this arrangment is that it allows for system calls to be interrupted arbitrarily. That is suspended and resumed later. Suspending a process typically the same if you are suspending user code, ie the code to the program itself or if it's running kernal code, ie a syscall.
 
@@ -149,6 +153,7 @@ For every process currently in the system, the OS keeps a data stucture that kee
 • Parent Directory
 • Root Directory
 
+```
 -----------------------------------------------
 |                 PROCESS                      |
 |   _________________________________________  |
@@ -183,6 +188,7 @@ For every process currently in the system, the OS keeps a data stucture that kee
 |  |     CODE aka "Text"                     | | // Program "text" so to speak, fixed in size 
 |  |_________________________________________| |
 -----------------------------------------------
+```
 
 Looking closer at address spaces, most processies include a section for whats called _**Uninitialized Data**_ && _**Initialized Data**_. These are sections of memory set aside at the start of each program for storing global variables. The difference being that in the _**Uninitialized Data**_ those global variables _do not_ have any initial value where _**Initialized Data**_ _they do_. Reason we thing of initialized globals different from uninitialized globals is that for every initialized global that value needs to be stored in the executable,the initital value, where as uninitialized globals there is no value, the executable just needs to make note of how much space it will need for addtional global variables.
 
