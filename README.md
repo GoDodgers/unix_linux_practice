@@ -41,20 +41,6 @@ File Descriptor 1 -- **Standard Out** (_abv. stdout_)
 
 By Convention, processes expect _**File Descriptor 0**_ (_stdin_) to be a file descriptor open for **reading** a terminal character device file, _**File Descriptor 1**_ (_stdout_) for **writing** that same terminal character device file. In practice this means when a process wishes to read text from a terminal it reads from stdin, and when a process wish to display text to that same terminal it writes to its stdout.
 
-### _Forking_
-
-The way we create a new process in Unix is for a process to copy itself. When a Process forks in unix, the data associated with that original process get copied form the parent to the child. That is to say it copies its _entire_ address space, user ids, enviroment, file descriptors, etc. This is done with the _**fork**_  syscall.
-
-```
-
-if fork() == 0:
-    # new child process
-else:
-    # original (parent) process
-
-```
-
-When the fork syscall returns, _**both**_ processies pick up precisely at that moment where the fork returned. The only difference between the two process is what value gets returned from invoking fork. In the newly created process, the fork, in the child process, returns 0. In the original process, the parent process, the process that invoked fork in the first place, the fork syscall returns what called the process ID (unique number identifying each process in the system) of that child process.
 
 ### _System Calls_
 
@@ -89,6 +75,23 @@ munmap(address)
 ```
 
 Note: Notice we do not specifiy which bytes of memory we want. Generally its left up to the OS to keep track of all the 'chunks' in the address space. So it's left up to the OS to go find a chunk of memory (in the above case) of _**at least**_ 5000 continuous bytes and return to us the address of that first byte.
+
+### _Forking_
+
+The way we create a new process in Unix is for a process to copy itself. When a Process forks in unix, the data associated with that original process get copied form the parent to the child. That is to say it copies its _entire_ address space, user ids, enviroment, file descriptors, etc. This is done with the _**fork**_  syscall.
+
+```
+
+if fork() == 0:
+    # new child process
+else:
+    # original (parent) process
+
+```
+
+When the fork syscall returns, _**both**_ processies pick up precisely at that moment where the fork returned. The only difference between the two process is what value gets returned from invoking fork. In the newly created process, the fork, in the child process, returns 0. In the original process, the parent process, the process that invoked fork in the first place, the fork syscall returns what called the process ID (unique number identifying each process in the system) of that child process.
+
+Note: a fork syscall may seem expensive to perform because it includes copying the address space of one process over to a child process, but this is not actually the case. In older Unix's that is actually what happened, but nowadays we have virtual memory. So what happens is that we only need to copy the _memory table_ for the process, not all the actual content. Where the content maybe mgs if not gbs in size, the memory tables themselves are actually quite small, kbs in size. So long as both process only read from their memory rather than write to it, because the memory hasn't change, might as well share the same copy. We want both processies to diverge, such that when in the new fork, when we write to memory that change should only be seen in the new process not the parent process or vice versa. To solve this problem all of the pages on the new process are marked as _**"Copy on Write"**_. As soon either process attemps to write to an address in that page, that triggers an exception in the CPU because it detects it in the memory table that this page has been marked as copy on write. And that then triggers the OS to before allowing the write to occur, to actually copy that page and then update the table of the new fork. Now that the fork has its own copy of that page its okay for writes to go through. This copy on write scheme allows modern unix's to very cheaply fork new process.
 
  * Terminals - TODO (own section probably)
 
