@@ -43,6 +43,17 @@ By Convention, processes expect _**File Descriptor 0**_ (_stdin_) to be a file d
 
 ### _Forking_
 
+The way we create a new process in Unix is for a process to copy itself. That is to copy its _entire_ address space, user ids, enviroment, file descriptors, etc. This is done with the _**fork**_ syscall.
+
+```
+
+if fork() == 0:
+    # new child process
+else:
+    # original (parent) process
+
+```
+
 When a Process forks in unix, the file descriptors get copied form the parent to child.
 
 ### _System Calls_
@@ -64,7 +75,7 @@ This includes syscalls for managing process them. Ex one process, starting other
 • I/O devices - in / out deivices (think stdin && stdout). _**Unix alows us to treat I/O devices like files.**_ What it really comes down to is that when it comes to reading / writing data from an I/O device, we can in most cases use the same syscalls that we use to read / write files. So in this sense we can treat I/O devices like files.
 
 ##### mmap - ( 'memory map' pages to the process address space )
-    • To allocate memory in a process, the process should invoke the _**mmap**_ syscall.
+    • To allocate memory in a process, the process should invoke the mmap syscall.
 
 ##### munmap - ( 'memory unmap' pages from the process address space )
     • Deallocates memory pages from the process address space
