@@ -43,7 +43,7 @@ By Convention, processes expect _**File Descriptor 0**_ (_stdin_) to be a file d
 
 ### _Forking_
 
-The way we create a new process in Unix is for a process to copy itself. That is to copy its _entire_ address space, user ids, enviroment, file descriptors, etc. This is done with the _**fork**_ syscall.
+The way we create a new process in Unix is for a process to copy itself. When a Process forks in unix, the data associated with that original process get copied form the parent to the child. That is to say it copies its _entire_ address space, user ids, enviroment, file descriptors, etc. This is done with the _**fork**_  syscall.
 
 ```
 
@@ -54,7 +54,7 @@ else:
 
 ```
 
-When a Process forks in unix, the file descriptors get copied form the parent to child.
+When the fork syscall returns, _**both**_ processies pick up precisely at that moment where the fork returned. The only difference between the two process is what value gets returned from invoking fork. In the newly created process, the fork, in the child process, returns 0. In the original process, the parent process, the process that invoked fork in the first place, the fork syscall returns what called the process ID (unique number identifying each process in the system) of that child process.
 
 ### _System Calls_
 
