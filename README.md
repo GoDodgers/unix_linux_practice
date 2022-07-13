@@ -151,24 +151,36 @@ For every process currently in the system, the OS keeps a data stucture that kee
 
 -----------------------------------------------
 |                 PROCESS                      |
-|                                              |
 |   _________________________________________  |
 |  |                                         | |
-|  |     Stack                               | |
+|  |     Kernal Code                         | | // Fixed in size
 |  |_________________________________________| |
 |   _________________________________________  |
 |  |                                         | |
-|  |     HEAP                                | |
+|  |     Stack                               | | // Starts empty, grows automatically with the start of a program 
+|  |_________________________________________| |
+|   _________________________________________  |
+|  |                                         | |
+|  |     HEAP                                | | // Explicitly allocated during execution
+|  |_________________________________________| |
+|                                              |
+|   _________________________________________  |
+|  |                                         | |
+|  |     HEAP                                | | // Explicitly allocated during execution
 |  |_________________________________________| |
 |                                              |
 |                                              |
 |   _________________________________________  |
 |  |                                         | |
-|  |     HEAP                                | |
+|  |     Uninitialized Data                  | | // Globals **Without** initial Value
 |  |_________________________________________| |
 |   _________________________________________  |
 |  |                                         | |
-|  |     CODE                                | |
+|  |     Initialized Data                    | | // Globals **With** initial Value
+|  |_________________________________________| |
+|   _________________________________________  |
+|  |                                         | |
+|  |     CODE aka "Text"                     | | // Program "text" so to speak, fixed in size 
 |  |_________________________________________| |
 -----------------------------------------------
 
@@ -176,6 +188,7 @@ Looking closer at address spaces, most processies include a section for whats ca
 
 How a process transitions between a few different states
 
+```
  _________________________________________             _________________________________________ 
 |                                         |           |                                         |
 |       NEW process Created               |           |         process TERMINATED              |
@@ -195,6 +208,7 @@ How a process transitions between a few different states
                            \                             |                                     |
                             \__________________________  |              BLOCKED                |
                                                          |_____________________________________|
+```
 
 Most obviouly a process can be _"running,"_ that is actually being currently executed by a CPU or it can be _"waiting."_ Meaning it can be waiting for the scheduler to put it in a _"running"_ state. While Running a process can also be transitioned in to the stateof being "blocked." While blocked a process will not be scheduled, so it wont ever run again until it is again placed into the "waiting" state. There are many way for which a process might get blocked, the most commen of which is from invoking certain syscalls, for example the syscall for reading from a file may block the process. General Pattern :: a process gets blocked when it has to wait for something, then either the OS or some other process will then single that process to unblock.
 
