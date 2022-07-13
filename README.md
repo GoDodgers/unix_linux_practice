@@ -2,18 +2,18 @@
 
 ## **UNIX**
 
-#### _History_
+### _History_
 
 Unix was the name of an OS that was original created in the early 1970s. Today however Unix refers to _any_ OS that immitates that same OS.
 
-#### _POSIX && SUS_
+### _POSIX && SUS_
 
 POSIX -- Portable Operating System Interface for Unix
 SUS -- Single Unix Specification
 
 The first stands that defined what it meant to be a Unix system. In the Late 80s and early 90s two such standards were created, POSIX and SUS. Today most varients of Unix more or less conform to both of these standards. Mainly these standards _fail_ to solve the problem of protablity because they _do not_ specifiy everything about a "Unix System." They are rather limited in their scope, so there are many features of today's Unix systems which work totaly different system - system or in some cases work only on some systems and not others. Ultimately programs should run on _any_ Unix system so long as they remain with the bounds of the two standards POSIX && SUS.
 
-#### _Terminal Character Device File_
+### _Terminal Character Device File_
 
 In unix system a process might communicate with a terminal via a special file representing that terminal -- _**Terminal Character Device File**_
 
@@ -22,11 +22,11 @@ When a prossess write to a _**Terminal Character Device File**_, that's putting 
 
 When a user types, that data gets sent from the terminal to the computer and then the OS will take that data and put it in the _input buffer_ of the associated _**Terminal Character Device File**_ and then the process may read from the _**Device File**_ to get that data.
 
-#### _Echoing Mode_
+### _Echoing Mode_
 
 With a _**Terminal Character Device File**_ we can turn on a mode called _Echoing_. When a terminal character device operates in echoing mode, then any input it recieves from the terminal it will then immediately echo back out to the terminal so it will appear on screen. In practice when echoing is on, whatever key is typed by the user the key will immediately appear on screen. ( Note :: the terminal _does not_ have an echoing mode, the _**Terminal Character Device File**_ has an echoing mode, so the data is actually being sent from the terminal and then immdiately back to the terminal )
 
-#### _Escape Squences_
+### _Escape Squences_
 
 A sequence of characters beging with the ascii escape charater (ascii code 27 ) 
 
@@ -41,11 +41,11 @@ File Descriptor 1 -- **Standard Out** (_abv. stdout_)
 
 By Convention, processes expect _**File Descriptor 0**_ (_stdin_) to be a file descriptor open for **reading** a terminal character device file, _**File Descriptor 1**_ (_stdout_) for **writing** that same terminal character device file. In practice this means when a process wishes to read text from a terminal it reads from stdin, and when a process wish to display text to that same terminal it writes to its stdout.
 
-#### _Forking_
+### _Forking_
 
 When a Process forks in unix, the file descriptors get copied form the parent to child.
 
-#### _System Calls_
+### _System Calls_
 
 System Calls effectively represent the functionality of the OS exposed to programs.
 
@@ -59,7 +59,7 @@ This includes syscalls for managing process them. Ex one process, starting other
 
 • Inter-process Communication - Basically a kind of mechanism for process to communicate with eachother. Sockets are a type of inter-process communication. IE when a process communicates over a socket, the other program does not have to be on another system, it can actually be another process on the same system. However for process to communicate over the same system there are other mechanisms which have the general advantage of being more efficient
 
-• Threads - When a process runs, by default it has one single "thread" of execution. That is there is one code pointer pointing to what current instuction is and there is one single stack keep track of the functions being invoked. With multiple threads of execution you can effectively split up a process into separate threads, each thread having its own code pointer and its own stack. A different way to think about threads is that they are like separate processies which run independently and are scheduled independently but they share the same address space. So the data on the heap can be read and written by any thread in the process. TODO :: Multi Threads
+• Threads - When a process runs, by default it has one single "thread" of execution. That is there is one code pointer pointing to what current instuction is and the re is one single stack keep track of the functions being invoked. With multiple threads of execution you can effectively split up a process into separate threads, each thread having its own code pointer and its own stack. A different way to think about threads is that they are like separate processies which run independently and are scheduled independently but they share the same address space. So the data on the heap can be read and written by any thread in the process. TODO :: Multi Threads
 
 • I/O devices - in / out deivices (think stdin && stdout). _**Unix alows us to treat I/O devices like files.**_ What it really comes down to is that when it comes to reading / writing data from an I/O device, we can in most cases use the same syscalls that we use to read / write files. So in this sense we can treat I/O devices like files.
 
@@ -137,7 +137,7 @@ Note: When a system call is invoked, it uses the stack of the process to place a
 Another advantage is that this arrangment is that it allows for system calls to be interrupted arbitrarily. That is suspended and resumed later. Suspending a process typically the same if you are suspending user code, ie the code to the program itself or if it's running kernal code, ie a syscall.
 
 
-#### _Process_
+### _Process_
 
 How a process transitions between a few different states
 
@@ -164,3 +164,4 @@ How a process transitions between a few different states
 Most obviouly a process can be _"running,"_ that is actually being currently executed by a CPU or it can be _"waiting."_ Meaning it can be waiting for the scheduler to put it in a _"running"_ state. While Running a process can also be transitioned in to the stateof being "blocked." While blocked a process will not be scheduled, so it wont ever run again until it is again placed into the "waiting" state. There are many way for which a process might get blocked, the most commen of which is from invoking certain syscalls, for example the syscall for reading from a file may block the process. General Pattern :: a process gets blocked when it has to wait for something, then either the OS or some other process will then single that process to unblock.
 
 Note: _"Blocking"_ effectively means _"waiting,"_ but what we call _"waiting"_ refers to waiting to be scheduled or ready to be scheduled. So a blocked process waiting from some trigger to unblock, then waits _**again**_ in the _"waiting"_ state to be scheduled.
+
