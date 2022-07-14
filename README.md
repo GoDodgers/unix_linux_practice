@@ -46,6 +46,81 @@ By Convention, processes expect _**File Descriptor 0**_ (_stdin_) to be a file d
 
 System Calls effectively represent the functionality of the OS exposed to programs.
 
+Functions in the OS code that programs can invoke with a special instuction. These system calls are the primary means by which the OS exposes functionality to programs so that these programs can use features of the hardware. Ex: read and write data on a storage device or send and recieve data accross the network
+
+Reason system calls can only be ivoked with a special instuction is that normally when a process executes, it cannot read / execute data thats part of the OS's kernal itself. Each process is to run essentially confined to its own "box" (its own part of memory), thus the special instuction will break out of this "box" and the way it does this is in the instuction one must specifiy the number of the system call you wish to invoke and that causes the CPU to lookup an address that corresponds to that number in a special table.
+
+Note: In most OS, the kernal code for these system calls are placed the address space of each process
+
+```
+-----------------------------------------------
+|   _________________________________________  |
+|  |                                         | |
+|  |     Kerernal Code                       | |  <-------- only accessible in system calls
+|  |_________________________________________| |
+|   _________________________________________  |
+|  |                                         | |
+|  |     Stack                               | |
+|  |_________________________________________| |
+|                                              |
+|                                              |
+|                                              |
+|   _________________________________________  |
+|  |                                         | |
+|  |     HEAP                                | |
+|  |_________________________________________| |
+|   _________________________________________  |
+|  |                                         | |
+|  |                                         | |
+|  |                                         | |
+|  |     HEAP                                | |
+|  |                                         | |
+|  |                                         | |
+|  |_________________________________________| |
+|                                              |
+|                                              |
+|                                              |
+|   _________________________________________  |
+|  |     HEAP                                | |
+|  |_________________________________________| |
+|   _________________________________________  |
+|  |                                         | |
+|  |     Code                                | |  ^^^ JUMPS to Kernal Code via special instuction ^^^
+|  |_________________________________________| |
+-----------------------------------------------
+```
+
+Note: When a system call is invoked, it uses the stack of the process to place a stackframe for that system call like any other function, to execute in that context of the process of which invokes them. Which avoids a context switch, ie the memory tables dont have to be switched out from the current process. Thus the table can be left in memory for the duration of the process.
+
+```
+-----------------------------------------------
+|                   STACK                      |
+|                                              |
+|   _________________________________________  |
+|  |                                         | |
+|  |     Frame of Syscall                    | |
+|  |_________________________________________| |
+|   _________________________________________  |
+|  |                                         | |
+|  |     Frame of Baz                        | |
+|  |_________________________________________| |
+|   _________________________________________  |
+|  |                                         | |
+|  |     Frame of Bar                        | |
+|  |_________________________________________| |
+|   _________________________________________  |
+|  |                                         | |
+|  |     Frame of Foo                        | |
+|  |_________________________________________| |
+|   _________________________________________  |
+|  |                                         | |
+|  |     Frame of Main                       | |
+|  |_________________________________________| |
+-----------------------------------------------
+```
+
+Another advantage is that this arrangment is that it allows for system calls to be interrupted arbitrarily. That is suspended and resumed later. Suspending a process typically the same if you are suspending user code, ie the code to the program itself or if it's running kernal code, ie a syscall.
+
 This includes syscalls for managing process them. Ex one process, starting other process so it can run another program. Then There are many syscall for dealing with...
 
 • Files, creating - deleting files, reading - writing files etc.
@@ -125,6 +200,8 @@ When a process terminates the process that can read its exit-code is the parent,
 
 ### _wait System Call_
 
+When a process invokes the _**wait()**_ syscall, it goes into a blocked state until the specified other process, in this case the child process terminates. At which point the wait system call returns the exit code from that child.
+
 ```
 pid = fork()
 
@@ -137,85 +214,30 @@ else:
 
 ```
 
- * Terminals - TODO (own section probably)
-
-Functions in the OS code that programs can invoke with a special instuction. These system calls are the primary means by which the OS exposes functionality to programs so that these programs can use features of the hardware. Ex: read and write data on a storage device or send and recieve data accross the network
-
-Reason system calls can only be ivoked with a special instuction is that normally when a process executes, it cannot read / execute data thats part of the OS's kernal itself. Each process is to run essentially confined to its own "box" (its own part of memory), thus the special instuction will break out of this "box" and the way it does this is in the instuction one must specifiy the number of the system call you wish to invoke and that causes the CPU to lookup an address that corresponds to that number in a special table.
-
-Note: In most OS, the kernal code for these system calls are placed the address space of each process
-
-```
------------------------------------------------
-|   _________________________________________  |
-|  |                                         | |
-|  |     Kerernal Code                       | |  <-------- only accessible in system calls
-|  |_________________________________________| |
-|   _________________________________________  |
-|  |                                         | |
-|  |     Stack                               | |
-|  |_________________________________________| |
-|                                              |
-|                                              |
-|                                              |
-|   _________________________________________  |
-|  |                                         | |
-|  |     HEAP                                | |
-|  |_________________________________________| |
-|   _________________________________________  |
-|  |                                         | |
-|  |                                         | |
-|  |                                         | |
-|  |     HEAP                                | |
-|  |                                         | |
-|  |                                         | |
-|  |_________________________________________| |
-|                                              |
-|                                              |
-|                                              |
-|   _________________________________________  |
-|  |     HEAP                                | |
-|  |_________________________________________| |
-|   _________________________________________  |
-|  |                                         | |
-|  |     Code                                | |  ^^^ JUMPS to Kernal Code via special instuction ^^^
-|  |_________________________________________| |
------------------------------------------------
-```
-
-Note: When a system call is invoked, it uses the stack of the process to place a stackframe for that system call like any other function, to execute in that context of the process of which invokes them. Which avoids a context switch, ie the memory tables dont have to be switched out from the current process. Thus the table can be left in memory for the duration of the process.
-
-```
------------------------------------------------
-|                   STACK                      |
-|                                              |
-|   _________________________________________  |
-|  |                                         | |
-|  |     Frame of Syscall                    | |
-|  |_________________________________________| |
-|   _________________________________________  |
-|  |                                         | |
-|  |     Frame of Baz                        | |
-|  |_________________________________________| |
-|   _________________________________________  |
-|  |                                         | |
-|  |     Frame of Bar                        | |
-|  |_________________________________________| |
-|   _________________________________________  |
-|  |                                         | |
-|  |     Frame of Foo                        | |
-|  |_________________________________________| |
-|   _________________________________________  |
-|  |                                         | |
-|  |     Frame of Main                       | |
-|  |_________________________________________| |
------------------------------------------------
-```
-
-Another advantage is that this arrangment is that it allows for system calls to be interrupted arbitrarily. That is suspended and resumed later. Suspending a process typically the same if you are suspending user code, ie the code to the program itself or if it's running kernal code, ie a syscall.
-
-
 ### _Process_
+
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+TODO                                                   TODO
+TODO     * Terminals - TODO (own section probably)     TODO
+TODO                                                   TODO
+TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO TODO
+
+### _Processies Enviroment_
+
+What is confusingly called a process enviroment is really just a chunk of data. Its some number of bytes with stuff in it. The one expectation how is that the enviroment is in the form ascii text. where each line starts with a varible name immediately followed by an equals sign (=) immediately followed by a value, where a value is really just any sequence of text characters. Ex... a typical enviroment might look something like this....
+
+```
+TERM=xterm
+SHELL=/bin/bash
+USER=greys
+MAIL=/var/mail/ted
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin
+PWD=/home/ted
+EDITOR=vim
+```
+## _name=value_
+
+The idea of the enviroment is that it is basically configuration data in the process itself. In fact the enviroment is always stored directly in the process itself somewhere on the heap. And the address of its location is always stored as a global variable in the data section. The idea is that the enviroment is handed down from one process to the next. So When one process is forked from another the child recieves a copy of the process in the state it was in upon the call to fork. This happens naturally because the enviroment lives in the address space of the parent process, and when we fork everything in the address space gets copied over. 
 
 Note :: See fork / exec syscall for process creation
 
