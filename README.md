@@ -93,6 +93,22 @@ When the fork syscall returns, _**both**_ processies pick up precisely at that m
 
 Note: a fork syscall may seem expensive to perform because it includes copying the address space of one process over to a child process, but this is not actually the case. In older Unix's that is actually what happened, but nowadays we have virtual memory. So what happens is that we only need to copy the _memory table_ for the process, not all the actual content. Where the content maybe mgs if not gbs in size, the memory tables themselves are actually quite small, kbs in size. So long as both process only read from their memory rather than write to it, because the memory hasn't change, might as well share the same copy. We want both processies to diverge, such that when in the new fork, when we write to memory that change should only be seen in the new process not the parent process or vice versa. To solve this problem all of the pages on the new process are marked as _**"Copy on Write"**_. As soon either process attemps to write to an address in that page, that triggers an exception in the CPU because it detects it in the memory table that this page has been marked as copy on write. And that then triggers the OS to before allowing the write to occur, to actually copy that page and then update the table of the new fork. Now that the fork has its own copy of that page its okay for writes to go through. This copy on write scheme allows modern unix's to very cheaply fork new process.
 
+### _Exec System Call_
+
+The Exec System Call does not create a new process, that is what fork does. What the exec syscall does is replace the current program in the process with a _new program_. And when it does this essenstially the entire address space of the process gets discarded and effectively a new one is created when loading in the new code from some executable file.
+
+```
+
+if fork() == 0:
+    # new child process
+    exec('games/pong')
+else:
+    # original (parent) process
+
+```
+
+When in Unix you wish to start a new program ^^. After the exec most everything about that process remains the same except from the very big difference that its a totally new address space with a new program. The process however retains most of the other resources of that processs such as the enviorment and the file descriptors.
+
  * Terminals - TODO (own section probably)
 
 Functions in the OS code that programs can invoke with a special instuction. These system calls are the primary means by which the OS exposes functionality to programs so that these programs can use features of the hardware. Ex: read and write data on a storage device or send and recieve data accross the network
