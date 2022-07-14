@@ -119,7 +119,23 @@ _exit(0)
 
 Note :: the reason for the underscore infront is to distinguish this system call from another function in the c standard libery exit
 
-When we invoke the _exit() syscall we pass in a numer called the "exit code". The exit-code indicated to other programs what happed, why did this program exit. And by _convention_ the exit-code 0 is used to denote that the process terminated normally. Other numbers are used to indicated some kind of error, something went wrong in the program. Again by _convention_ programs should use specific exit-codes to indicate a specific kind of error. ie, exit-code -1 means the program exited because it ran out of memory. Again there are no hard and fast rules about what exit-codes mean, its really up to the indicidual program to decide what they mean.
+When we invoke the _exit() syscall we pass in a numer called the "exit code". The exit-code indicated to other programs what happed, why did this program exit. And by _convention_ the exit-code 0 is used to denote that the process terminated normally. Other numbers are used to indicated some kind of error, something went wrong in the program. Again by _convention_ programs should use specific exit-codes to indicate a specific kind of error. ie, exit-code -1 means the program exited because it ran out of memory. Again there are no hard and fast rules about what exit-codes mean, its really up to the indicidual program to decide what they mean. 
+
+When a process terminates the process that can read its exit-code is the parent, the process from which it was forked. And the most common way the parent does this is to invoke the wait() system call
+
+### _wait System Call_
+
+```
+pid = fork()
+
+if fork() == 0:
+    # new child process
+    exec('games/pong')
+else:
+    # original (parent) process
+    code = wait(pid)
+
+```
 
  * Terminals - TODO (own section probably)
 
