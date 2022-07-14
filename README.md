@@ -109,6 +109,18 @@ else:
 
 When in Unix you wish to start a new program ^^. After the exec most everything about that process remains the same except from the very big difference that its a totally new address space with a new program. The process however retains most of the other resources of that processs such as the enviorment and the file descriptors.
 
+### __exit System Call_
+
+When a process wishes to terminate itself it is done so by invoking _**_exit**_ system call.
+
+```
+_exit(0)
+```
+
+Note :: the reason for the underscore infront is to distinguish this system call from another function in the c standard libery exit
+
+When we invoke the _exit() syscall we pass in a numer called the "exit code". The exit-code indicated to other programs what happed, why did this program exit. And by _convention_ the exit-code 0 is used to denote that the process terminated normally. Other numbers are used to indicated some kind of error, something went wrong in the program. Again by _convention_ programs should use specific exit-codes to indicate a specific kind of error. ie, exit-code -1 means the program exited because it ran out of memory. Again there are no hard and fast rules about what exit-codes mean, its really up to the indicidual program to decide what they mean.
+
  * Terminals - TODO (own section probably)
 
 Functions in the OS code that programs can invoke with a special instuction. These system calls are the primary means by which the OS exposes functionality to programs so that these programs can use features of the hardware. Ex: read and write data on a storage device or send and recieve data accross the network
@@ -272,3 +284,4 @@ Most obviouly a process can be _"running,"_ that is actually being currently exe
 
 Note: _"Blocking"_ effectively means _"waiting,"_ but what we call _"waiting"_ refers to waiting to be scheduled or ready to be scheduled. So a blocked process waiting from some trigger to unblock, then waits _**again**_ in the _"waiting"_ state to be scheduled.
 
+Note :: Process can get terminated for a verity of reasons, but when a process wishes to terminate itself it is done so with the _**_exit**_ system call.
