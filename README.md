@@ -257,9 +257,15 @@ Some what confusingly, associated with each process is not just one user id, tha
 
 • "real" ID: The owning User
 • "effective" ID: Determines privileges
-• "saved" ID: Set by exec to match effective ID
+• "saved" ID: Set by exec to match effective ID ( saved id effectively keeps a record of whatever the effective id was at the time of the last exec call )
 
 Note :: each file and directory is owned by a single user
+
+How the user ids of a process can get changed.
+
+• The _exec_ system call may change the effective and saved ids when the binary file, the executable file being loaded has a special flag get on it called the _**setuid**_ bit. When this flag is on the exec'd executable file the effective and saved id get set to the user id of the owner of that executable file. The most common use for the _**setuid**_ mechanism is that we want a program with non-super-user privileges to be able to run a program with super-user privileges.
+
+• The processies user ids can also be set more directly with the _**seteuid**_ && _**setuid**_ system calls. the _**seteuid**_ only sets the "effective" user id where as the _**setuid**_ sets the "real" "effective" "saved" user ids. The main limitation with this mechanism is that non-super-users can only directly set the "effective" id to match the real or saved id and only the root user can use these system calls to set processies ids.
 
 For every process currently in the system, the OS keeps a data stucture that keeps track of everything associated with that process. And those things include ...
 
