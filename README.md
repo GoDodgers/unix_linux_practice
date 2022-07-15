@@ -249,7 +249,17 @@ Processies not only have associated pid but they also have an associated user id
 
 ## _Root / Super User_
 
-In most Unix systems the accounts on the system are all listed in a file called _**"/etc/passwd"**_. etc is a standard dir mainly for config files. The user account given the id number **0** is a special account called the root user or the super user. This user account is special because its allowed to do anything it wants. So when a process is runnnin with the privileges of the super user account, system calls will _**never**_ fail for privileges reasons.
+In most Unix systems the accounts on the system are all listed in a file called _**"/etc/passwd"**_. etc is a standard dir mainly for config files. The user account given the id number **0** is a special account called the root user or the super user. This user account is special because its allowed to do anything it wants. So when a process is running with the privileges of the super user account, system calls will _**never**_ fail for privileges reasons.
+
+## _Real / Effective / Saved ID_
+
+Some what confusingly, associated with each process is not just one user id, that is the user id of the owner of the process, but actually three different ids.
+
+• "real" ID: The owning User
+• "effective" ID: Determines privileges
+• "saved" ID: Set by exec to match effective ID
+
+Note :: each file and directory is owned by a single user
 
 For every process currently in the system, the OS keeps a data stucture that keeps track of everything associated with that process. And those things include ...
 
