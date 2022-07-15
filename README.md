@@ -245,6 +245,12 @@ Note :: See fork / exec syscall for process creation
 
 If processies are only created from other processies, that leaves that question where did the first process come from? When a Unix system starts, there is always a first process called the _**init process**_. And from there all other processies decend. Effectively you end up with this higherarchy of processies starting with init and in-turn their children and their children and so forth. Each process that is created is known by a unique id number, ie a _**Process ID Number**_ or _**pid**_. _**init**_ always has the pid of **1** and any subsequent process from created from there have basically whatever is the next avaible pid number numerically. Do understand that these pid numbers can be reused.
 
+Processies not only have associated pid but they also have an associated user id. That is a number that indicates the user that owns this process. The idea of a user account is that a user account has an associated set of privileges, and so when a process is owned by an user, the process has the privileges of that user and only that user. What that effectively means, is when you execute certain system calls, those system calls may fail because the user that owns the process does not have the privilege to perform that action. For example if the user which owns the process does not have the privilege to write to a certain file, then all attempts to write to that file will fail.
+
+## _Root / Super User_
+
+In most Unix systems the accounts on the system are all listed in a file called _**"/etc/passwd"**_. etc is a standard dir mainly for config files. The user account given the id number **0** is a special account called the root user or the super user. This user account is special because its allowed to do anything it wants. So when a process is runnnin with the privileges of the super user account, system calls will _**never**_ fail for privileges reasons.
+
 For every process currently in the system, the OS keeps a data stucture that keeps track of everything associated with that process. And those things include ...
 
 • Address Space - ( the memory table that is loaded when that process is running )
