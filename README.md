@@ -251,6 +251,21 @@ Processies not only have associated pid but they also have an associated user id
 
 In most Unix systems the accounts on the system are all listed in a file called _**"/etc/passwd"**_. etc is a standard dir mainly for config files. The user account given the id number **0** is a special account called the root user or the super user. This user account is special because its allowed to do anything it wants. So when a process is running with the privileges of the super user account, system calls will _**never**_ fail for privileges reasons.
 
+Consider what happens when a Unix system starts. When a Unix system starts, its just the one process, the init process that is owned by the super user that runs with super user privileges. The init process then spawns the login process, basically a process that prompts a human to enter a user account, name and password to login ( runs with super user privileges ). Once you successful login, the login process spawns a shell process and that shell is owned by the user account that just logged in and runs with the privileges of that user account.
+
+
+```
+#pid 1 (init) user 0
+        |            \
+        |              fork, exec
+        V            /
+#pid 2 (login) user 0
+        |            \
+        |              fork, setuid, exec
+        V            /
+#pid 3 (shell) user 1780
+```
+
 ## _Real / Effective / Saved ID_
 
 Some what confusingly, associated with each process is not just one user id, that is the user id of the owner of the process, but actually three different ids.
