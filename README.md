@@ -271,13 +271,15 @@ Consider what happens when a Unix system starts. When a Unix system starts, its 
 # etc/group
 ```
 
-A user group as the name implies is just an assoication of user accounts, and these groups ar non exclusive.
+A user group as the name implies is just an assoication of user accounts, and these groups ar non exclusive.a
 
 • User may belong to multiple groups, but have one primary group
 • Each file and directory is owned by one group.
 • Each process has a real, effective, saved group id
 • binary files have _setgid_ bit
 • _setegid_ and _setgid_
+
+Note :: In truth groups are almost a legecy feature of Unix systems, they are traditionally part of unix because in the early days, unix was primarly used as a multi user system, where you have multiple people logging into the same system. So it was thought unix needed some in-built mechanism to group users together but for various reasons that model of computing is out of date. You typically do not have a unix system where multiple people login to the same system, everyone has their own system now changing the paradigm.
 
 ## _Real / Effective / Saved ID_
 
