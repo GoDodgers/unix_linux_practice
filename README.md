@@ -296,13 +296,13 @@ Note :: In truth groups are almost a legecy feature of Unix systems, they are tr
 Associated with each _file_ and each _directory_ are 9 different permissions
 
 ```
- _____________________     _____________________     _____________________ 
-|                     |   |                     |   |                     |
-|        RWX          |   |         RWX         |   |         RWX         |
-|_____________________|   |_____________________|   |_____________________|
-          |                          |                          |
-          |                          |                          |
-        user                       group                      other
+ ______     _____________________     _____________________     _____________________ 
+|      |   |                    |   |                     |   |                     |
+|   D  |   |       RWX          |   |         RWX         |   |         RWX         |
+|______|   |____________________|   |_____________________|   |_____________________|
+    |               |                          |                          |
+    |               |                          |                          |
+   dir            user                       group                      other
 
 File permissions
 
@@ -317,6 +317,7 @@ Directory permissions
 * Exexcute :: most confusing, doesnt really have anything to do with execution. When you dont have exectute permission on a directory, that effectively means you cannot use that directory in any file path. Any system call with that directory in the filepath with fail. If the directroy without execute permission is the last component of a file path, that is if the file path points to that directory itself then thats okay, its only when we try to use the directory in a file path to get a stuff _inside_ that directory that it will fail.
 
 ( * assume we do not have execute permission for "taft" dir )
+
 /adams/taft/garfield/eisenhower  <not okay>
 /adams/taft/  <okay>
 
