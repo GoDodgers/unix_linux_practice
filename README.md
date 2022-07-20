@@ -266,6 +266,16 @@ Consider what happens when a Unix system starts. When a Unix system starts, its 
 #pid 3 (shell) user 1780
 ```
 
+## _Real / Effective / Saved ID_
+
+Some what confusingly, associated with each process is not just one user id, that is the user id of the owner of the process, but actually three different ids.
+
+• "real" ID: The owning User
+• "effective" ID: Determines privileges
+• "saved" ID: Set by exec to match effective ID ( saved id effectively keeps a record of whatever the effective id was at the time of the last exec call )
+
+Note :: each file and directory is owned by a single user
+
 ## _User Groups_
 ```
 # etc/group
@@ -281,15 +291,48 @@ A user group as the name implies is just an assoication of user accounts, and th
 
 Note :: In truth groups are almost a legecy feature of Unix systems, they are traditionally part of unix because in the early days, unix was primarly used as a multi user system, where you have multiple people logging into the same system. So it was thought unix needed some in-built mechanism to group users together but for various reasons that model of computing is out of date. You typically do not have a unix system where multiple people login to the same system, everyone has their own system now changing the paradigm.
 
-## _Real / Effective / Saved ID_
+## _Permissions_
 
-Some what confusingly, associated with each process is not just one user id, that is the user id of the owner of the process, but actually three different ids.
+Associated with each _file_ and each _directory_ are 9 different permissions
 
-• "real" ID: The owning User
-• "effective" ID: Determines privileges
-• "saved" ID: Set by exec to match effective ID ( saved id effectively keeps a record of whatever the effective id was at the time of the last exec call )
+```
+ _____________________     _____________________     _____________________ 
+|                     |   |                     |   |                     |
+|        RWX          |   |         RWX         |   |         RWX         |
+|_____________________|   |_____________________|   |_____________________|
+          |                          |                          |
+          |                          |                          |
+        user                       group                      other
 
-Note :: each file and directory is owned by a single user
+File permissions
+
+* Read :: can read bytes of a file
+* Write :: can modify bytes of a file
+* Exexcute :: can _exec_ a file
+
+Directory permissions
+
+* Read :: you can see all the names of the files and directories which that directory contains
+* Write :: means you can modify this listing, you can remove or rename or add any of the files or directories in that director
+* Exexcute :: most confusing, doesnt really have anything to do with execution. When you dont have exectute permission on a directory, that effectively means you cannot use that directory in any file path. Any system call with that directory in the filepath with fail. If the directroy without execute permission is the last component of a file path, that is if the file path points to that directory itself then thats okay, its only when we try to use the directory in a file path to get a stuff _inside_ that directory that it will fail.
+
+( * assume we do not have execute permission for "taft" dir )
+/adams/taft/garfield/eisenhower  <not okay>
+/adams/taft/  <okay>
+
+```
+
+Each one of these permissions is either on or off, set or unset. Which Class of permissions applies to a process is determined by the following rule.
+
+```
+if file_user_id == effective_user_id:
+    user class
+else if file_group_id == effective_group_id:
+    group class
+else:
+    other
+```
+
 
 How the user ids of a process can get changed.
 
