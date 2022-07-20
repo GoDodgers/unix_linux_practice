@@ -266,6 +266,19 @@ Consider what happens when a Unix system starts. When a Unix system starts, its 
 #pid 3 (shell) user 1780
 ```
 
+## _User Groups_
+```
+# etc/group
+```
+
+A user group as the name implies is just an assoication of user accounts, and these groups ar non exclusive.
+
+• User may belong to multiple groups, but have one primary group
+• Each file and directory is owned by one group.
+• Each process has a real, effective, saved group id
+• binary files have _setgid_ bit
+• _setegid_ and _setgid_
+
 ## _Real / Effective / Saved ID_
 
 Some what confusingly, associated with each process is not just one user id, that is the user id of the owner of the process, but actually three different ids.
