@@ -142,29 +142,30 @@ TODO :: TODO :: TODO ::
 The foremost system calls for dealing with files are the open, close, read && write syscalls.
 
 ##### _open_
-    • When reading and writing to file first that file has to be open, so you invoke to open syscall passing in the file path to that file.
-    • open / create a file and return a file descriptor
 
-# File Descriptor
+• When reading and writing to file first that file has to be open, so you invoke to open syscall passing in the file path to that file.
+• open / create a file and return a file descriptor
+
+###### File Descriptor
 Note :: basically a number which in your process uniquely identifies an open file.
 
 ##### _close_
 
-    • release file descriptor
-    • invoking read does take a file path as an argument, it takes a file descriptor 
+• release file descriptor
+• invoking read does take a file path as an argument, it takes a file descriptor 
 
 Note :: releasing file descriptors is not strictly critical but good practice.
  
 ##### _read_
 
-    • The call to read will copy data from the process to a buffer in memory outside the process controlled by the OS, when a process invokes read, the data is not copied directly from the storage device to some process first it is copied to some buffer in the OS, and then from there copied to the process.
-    • The read syscall works by first checking the buffer and seeing if the data it wants is already there, if not the process will _block_ while that data plus some amount of extra data most likely is read into the buffer and then the process will _unblock_ once the data is in the buffer, at which point the data can actually be copied into the process.
-    • While it is left up to read to decide how much data to return, calls to read are always gauranteed to return some amount of data, when there is data in the file left to be read. So this means read will _only_ return _no data_ in the special case where you are attempting to read at the end of the file.
-    • So in the cases where you invoke read and there is data left in the file, but there is nothing in the buffer, read _will not_ just return nothing, read will block your process and wait for something to be read into the buffer. 
-    • copy bytes from file to memory ( this call also _may blocks_ )
-    • Under which circumstances these syscalls may block depends on the type of file being read and options when that file was open
-    • Default read _blocks_
-    • invoking read does take a file path as an argument, it takes a file descriptor
+• The call to read will copy data from the process to a buffer in memory outside the process controlled by the OS, when a process invokes read, the data is not copied directly from the storage device to some process first it is copied to some buffer in the OS, and then from there copied to the process.
+• The read syscall works by first checking the buffer and seeing if the data it wants is already there, if not the process will _block_ while that data plus some amount of extra data most likely is read into the buffer and then the process will _unblock_ once the data is in the buffer, at which point the data can actually be copied into the process.
+• While it is left up to read to decide how much data to return, calls to read are always gauranteed to return some amount of data, when there is data in the file left to be read. So this means read will _only_ return _no data_ in the special case where you are attempting to read at the end of the file.
+• So in the cases where you invoke read and there is data left in the file, but there is nothing in the buffer, read _will not_ just return nothing, read will block your process and wait for something to be read into the buffer. 
+• copy bytes from file to memory ( this call also _may blocks_ )
+• Under which circumstances these syscalls may block depends on the type of file being read and options when that file was open
+• Default read _blocks_
+• invoking read does take a file path as an argument, it takes a file descriptor
 
 ```
 f = open('alice/tim')
@@ -186,12 +187,13 @@ close(f)
 Consider now this code which reads in a whole file and prints all of it.
 
 ##### _write_
-    • copy bytes of memory to a file ( this call also may blocks_ )
-    • Under which circumstances these syscalls may block depends on the type of file being write and options when that file was open
-    • Default write _does not block_
-    • The call to write will copy data from the process to a buffer in memory outside the process controlled by the OS, from there the OS will write the data from the buffer to the actual storage device
-    • invoking read does take a file path as an argument, it takes a file descriptor
-    • Your process cannot really know if your data is written to disk, or if in fact it was ever actually written to disk; you never get any actual verification that it happend. Its quite possible that the process can terminate before the data is ever actually written to disk. There are ways in unix systems of writing to some file such that you do get verification that the data was actually written, just note by default you get no such assurance.
+
+• copy bytes of memory to a file ( this call also may blocks_ )
+• Under which circumstances these syscalls may block depends on the type of file being write and options when that file was open
+• Default write _does not block_
+• The call to write will copy data from the process to a buffer in memory outside the process controlled by the OS, from there the OS will write the data from the buffer to the actual storage device
+• invoking read does take a file path as an argument, it takes a file descriptor
+• Your process cannot really know if your data is written to disk, or if in fact it was ever actually written to disk; you never get any actual verification that it happend. Its quite possible that the process can terminate before the data is ever actually written to disk. There are ways in unix systems of writing to some file such that you do get verification that the data was actually written, just note by default you get no such assurance.
 
 ```
 f = open('alice/tim')
@@ -204,10 +206,12 @@ Note :: Here we do not specify where in the file we wish to read in write, what 
 
     
 ##### mmap - ( 'memory map' pages to the process address space )
-    • To allocate memory in a process, the process should invoke the mmap syscall.
+
+• To allocate memory in a process, the process should invoke the mmap syscall.
 
 ##### munmap - ( 'memory unmap' pages from the process address space )
-    • Deallocates memory pages from the process address space
+
+• Deallocates memory pages from the process address space
 
 ```
 address = mmap(5000)
