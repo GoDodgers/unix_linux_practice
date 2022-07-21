@@ -149,12 +149,14 @@ The foremost system calls for dealing with files are the open, close, read && wr
 Note :: basically a number which in your process uniquely identifies an open file.
 
 ##### _close_
+
     • release file descriptor
     • invoking read does take a file path as an argument, it takes a file descriptor 
 
 Note :: releasing file descriptors is not strictly critical but good practice.
  
 ##### _read_
+
     • The call to read will copy data from the process to a buffer in memory outside the process controlled by the OS, when a process invokes read, the data is not copied directly from the storage device to some process first it is copied to some buffer in the OS, and then from there copied to the process.
     • The read syscall works by first checking the buffer and seeing if the data it wants is already there, if not the process will _block_ while that data plus some amount of extra data most likely is read into the buffer and then the process will _unblock_ once the data is in the buffer, at which point the data can actually be copied into the process.
     • While it is left up to read to decide how much data to return, calls to read are always gauranteed to return some amount of data, when there is data in the file left to be read. So this means read will _only_ return _no data_ in the special case where you are attempting to read at the end of the file.
