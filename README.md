@@ -166,6 +166,7 @@ Note :: releasing file descriptors is not strictly critical but good practice.
     • Default write _does not block_
     • The call to write will copy data from the process to a buffer in memory outside the process controlled by the OS, from there the OS will write the data from the buffer to the actual storage device
     • invoking read does take a file path as an argument, it takes a file descriptor
+    • Your process cannot really know if your data is written to disk, or if in fact it was ever actually written to disk; you never get any actual verification that it happend. Its quite possible that the process can terminate before the data is ever actually written to disk. There are ways in unix systems of writing to some file such that you do get verification that the data was actually written, just note by default you get no such assurance.
 
 ```
 f = open('alice/tim')
@@ -173,6 +174,9 @@ write(f, 'blah blah')
 write(f, 'bling bling bling blah')
 close(f)
 ```
+
+Note :: Here we do not specify where in the file we wish to read in write, what is happening here is that the first write starts at byte 0, at the start of the file, then the next byte gets tacked on after that.
+
     
 ##### mmap - ( 'memory map' pages to the process address space )
     • To allocate memory in a process, the process should invoke the mmap syscall.
