@@ -153,7 +153,7 @@ Note :: basically a number which in your process uniquely identifies an open fil
     • invoking read does take a file path as an argument, it takes a file descriptor 
 
 Note :: releasing file descriptors is not strictly critical but good practice.
-
+ 
 ##### _read_
     • copy bytes from file to memory ( this call also _may blocks_ )
     • Under which circumstances these syscalls may block depends on the type of file being read and options when that file was open
@@ -164,7 +164,15 @@ Note :: releasing file descriptors is not strictly critical but good practice.
     • copy bytes of memory to a file ( this call also may blocks_ )
     • Under which circumstances these syscalls may block depends on the type of file being write and options when that file was open
     • Default write _does not block_
+    • The call to write will copy data from the process to a buffer in memory outside the process controlled by the OS, from there the OS will write the data from the buffer to the actual storage device
     • invoking read does take a file path as an argument, it takes a file descriptor
+
+```
+f = open('alice/tim')
+write(f, 'blah blah')
+write(f, 'bling bling bling blah')
+close(f)
+```
     
 ##### mmap - ( 'memory map' pages to the process address space )
     • To allocate memory in a process, the process should invoke the mmap syscall.
