@@ -131,10 +131,41 @@ This includes syscalls for managing process them. Ex one process, starting other
 
 • Inter-process Communication - Basically a kind of mechanism for process to communicate with eachother. Sockets are a type of inter-process communication. IE when a process communicates over a socket, the other program does not have to be on another system, it can actually be another process on the same system. However for process to communicate over the same system there are other mechanisms which have the general advantage of being more efficient
 
-• Threads - When a process runs, by default it has one single "thread" of execution. That is there is one code pointer pointing to what current instuction is and the re is one single stack keep track of the functions being invoked. With multiple threads of execution you can effectively split up a process into separate threads, each thread having its own code pointer and its own stack. A different way to think about threads is that they are like separate processies which run independently and are scheduled independently but they share the same address space. So the data on the heap can be read and written by any thread in the process. TODO :: Multi Threads
+• Threads - When a process runs, by default it has one single "thread" of execution. That is there is one code pointer pointing to what current instuction is and the re is one single stack keep track of the functions being invoked. With multiple threads of execution you can effectively split up a process into separate threads, each thread having its own code pointer and its own stack. A different way to think about threads is that they are like separate processies which run independently and are scheduled independently but they share the same address space. So the data on the heap can be read and written by any thread in the process.
+
+TODO :: TODO :: TODO ::
+Multi Threads
+TODO :: TODO :: TODO :: 
 
 • I/O devices - in / out deivices (think stdin && stdout). _**Unix alows us to treat I/O devices like files.**_ What it really comes down to is that when it comes to reading / writing data from an I/O device, we can in most cases use the same syscalls that we use to read / write files. So in this sense we can treat I/O devices like files.
 
+The foremost system calls for dealing with files are the open, close, read && write syscalls.
+
+##### _open_
+    • When reading and writing to file first that file has to be open, so you invoke to open syscall passing in the file path to that file.
+    • open / create a file and return a file descriptor
+
+# File Descriptor
+Note :: basically a number which in your process uniquely identifies an open file.
+
+##### _close_
+    • release file descriptor
+    • invoking read does take a file path as an argument, it takes a file descriptor 
+
+Note :: releasing file descriptors is not strictly critical but good practice.
+
+##### _read_
+    • copy bytes from file to memory ( this call also _may blocks_ )
+    • Under which circumstances these syscalls may block depends on the type of file being read and options when that file was open
+    • Default read _blocks_
+    • invoking read does take a file path as an argument, it takes a file descriptor
+
+##### _write_
+    • copy bytes of memory to a file ( this call also may blocks_ )
+    • Under which circumstances these syscalls may block depends on the type of file being write and options when that file was open
+    • Default write _does not block_
+    • invoking read does take a file path as an argument, it takes a file descriptor
+    
 ##### mmap - ( 'memory map' pages to the process address space )
     • To allocate memory in a process, the process should invoke the mmap syscall.
 
