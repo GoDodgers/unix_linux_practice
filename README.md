@@ -155,10 +155,33 @@ Note :: basically a number which in your process uniquely identifies an open fil
 Note :: releasing file descriptors is not strictly critical but good practice.
  
 ##### _read_
+    • The call to read will copy data from the process to a buffer in memory outside the process controlled by the OS, when a process invokes read, the data is not copied directly from the storage device to some process first it is copied to some buffer in the OS, and then from there copied to the process.
+    • The read syscall works by first checking the buffer and seeing if the data it wants is already there, if not the process will _block_ while that data plus some amount of extra data most likely is read into the buffer and then the process will _unblock_ once the data is in the buffer, at which point the data can actually be copied into the process.
+    • While it is left up to read to decide how much data to return, calls to read are always gauranteed to return some amount of data, when there is data in the file left to be read. So this means read will _only_ return _no data_ in the special case where you are attempting to read at the end of the file.
+    • So in the cases where you invoke read and there is data left in the file, but there is nothing in the buffer, read _will not_ just return nothing, read will block your process and wait for something to be read into the buffer. 
     • copy bytes from file to memory ( this call also _may blocks_ )
     • Under which circumstances these syscalls may block depends on the type of file being read and options when that file was open
     • Default read _blocks_
     • invoking read does take a file path as an argument, it takes a file descriptor
+
+```
+f = open('alice/tim')
+data = read(f)
+close(f)
+```
+
+Note :: How much data does the call to read actually return? In fact the amount of data that read returns is not up to the user, it is left up to read itself to decide how much data to return. When invoking read the user can decide the _max_ amount of data you want to return, the max number of bytes. But its left up to read to decide whether or not to return that much or actually less. read works this way for performance reasons, consider for example if you invoke read and request 4000k bytes. Well if only 2000k bytes are avaible in the read buffer, that means the process would have to block to wait for the remaining 2000k bytes. read will probably decide in this case rather than block your process, read will just return those 2000k bytes and it will be left up to your program to check how much data was _actually_ returned by read and then call read again to get the rest.
+
+```
+f = open('alice/tim')
+data = read(f)
+while len(data) != 0:
+    print(data)
+    data = read(f)
+close(f)
+```
+
+Consider now this code which reads in a whole file and prints all of it.
 
 ##### _write_
     • copy bytes of memory to a file ( this call also may blocks_ )
